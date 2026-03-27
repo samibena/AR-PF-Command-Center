@@ -605,9 +605,14 @@
                     <div class="stat-change positive" id="pourcentageMarge">41.9%</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Cashflow Net</h3>
-                    <div class="stat-value" id="cashflowNet">0 DH</div>
-                    <div class="stat-change" id="cashflowStatus">En attente 1er versement</div>
+                    <h3>Progression Globale</h3>
+                    <div class="stat-value" id="progressionGlobale">0%</div>
+                    <div style="margin-top: 1rem;">
+                        <div class="progress-bar" style="height: 12px;">
+                            <div class="progress-fill" id="progressionGlobaleFill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="stat-change" id="progressionDetail">0/0 livrables terminés</div>
                 </div>
             </div>
 
@@ -815,6 +820,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         window.db = db;
+        window.doc = doc;
+        window.updateDoc = updateDoc;
+        window.setDoc = setDoc;
 
         // État de synchronisation
         window.setSyncStatus = function(status, text) {
@@ -1165,6 +1173,7 @@
         // RENDER FUNCTIONS
         
         function renderTimeline(timeline) {
+            window.currentTimeline = timeline; // Sauvegarder pour toggleTimelineStatus
             const container = document.getElementById('timelineContainer');
             container.innerHTML = timeline.map(item => `
                 <div class="timeline-item ${item.status}">
@@ -1179,23 +1188,25 @@
             `).join('');
         }
 
-        async function toggleTimelineStatus(date, title) {
-            const timelineRef = window.db ? doc(window.db, 'settings', 'timeline') : null;
-            if (!timelineRef) return;
+        // Variable globale pour stocker la timeline
+        window.currentTimeline = [];
 
-            const snapshot = await getDoc(timelineRef);
-            if (snapshot.exists()) {
-                const data = snapshot.data();
-                const milestones = data.milestones || [];
-                const item = milestones.find(t => t.date === date && t.title === title);
-                if (item) {
-                    item.status = item.status === 'completed' ? 'pending' : 'completed';
-                    await window.saveToFirebase('settings', 'timeline', { milestones });
-                }
+        async function toggleTimelineStatus(date, title) {
+            if (!window.currentTimeline || window.currentTimeline.length === 0) return;
+            
+            const milestones = [...window.currentTimeline];
+            const item = milestones.find(t => t.date === date && t.title === title);
+            if (item) {
+                item.status = item.status === 'completed' ? 'pending' : 'completed';
+                await window.saveToFirebase('settings', 'timeline', { milestones });
             }
         }
 
+        // Variable globale pour stocker le budget
+        window.currentBudget = null;
+
         function renderBudget(budget) {
+            window.currentBudget = budget; // Sauvegarder pour les fonctions toggle
             const container = document.getElementById('budgetAccordion');
             const postes = [
                 { key: 'passageFitness', title: 'Passage Fitness', facture: 215000, cout: 198500 },
@@ -1311,57 +1322,41 @@
         }
 
         async function toggleBudgetPayment(posteKey, date) {
-            const budgetRef = window.db ? doc(window.db, 'settings', 'budget') : null;
-            if (!budgetRef) return;
-
-            const snapshot = await getDoc(budgetRef);
-            if (snapshot.exists()) {
-                const budget = snapshot.data();
-                const paiement = budget[posteKey].paiements.find(p => p.date === date);
-                if (paiement) {
-                    paiement.statut = paiement.statut === 'paid' ? 'pending' : 'paid';
-                    await window.saveToFirebase('settings', 'budget', budget);
-                }
+            if (!window.currentBudget) return;
+            
+            const budget = JSON.parse(JSON.stringify(window.currentBudget)); // Deep copy
+            const paiement = budget[posteKey].paiements.find(p => p.date === date);
+            if (paiement) {
+                paiement.statut = paiement.statut === 'paid' ? 'pending' : 'paid';
+                await window.saveToFirebase('settings', 'budget', budget);
             }
         }
 
         async function toggleBudgetItemStatus(posteKey, itemIdx) {
-            const budgetRef = window.db ? doc(window.db, 'settings', 'budget') : null;
-            if (!budgetRef) return;
-
-            const snapshot = await getDoc(budgetRef);
-            if (snapshot.exists()) {
-                const budget = snapshot.data();
-                const item = budget[posteKey].items[itemIdx];
-                if (item) {
-                    item.statut = item.statut === 'paid' ? 'pending' : 'paid';
-                    await window.saveToFirebase('settings', 'budget', budget);
-                }
+            if (!window.currentBudget) return;
+            
+            const budget = JSON.parse(JSON.stringify(window.currentBudget)); // Deep copy
+            const item = budget[posteKey].items[itemIdx];
+            if (item) {
+                item.statut = item.statut === 'paid' ? 'pending' : 'paid';
+                await window.saveToFirebase('settings', 'budget', budget);
             }
         }
 
         async function updateBudgetItemAmount(posteKey, itemIdx, value) {
-            const budgetRef = window.db ? doc(window.db, 'settings', 'budget') : null;
-            if (!budgetRef) return;
-
-            const snapshot = await getDoc(budgetRef);
-            if (snapshot.exists()) {
-                const budget = snapshot.data();
-                budget[posteKey].items[itemIdx].montant = parseInt(value) || 0;
-                await window.saveToFirebase('settings', 'budget', budget);
-            }
+            if (!window.currentBudget) return;
+            
+            const budget = JSON.parse(JSON.stringify(window.currentBudget)); // Deep copy
+            budget[posteKey].items[itemIdx].montant = parseInt(value) || 0;
+            await window.saveToFirebase('settings', 'budget', budget);
         }
 
         async function updateBudgetItemDate(posteKey, itemIdx, value) {
-            const budgetRef = window.db ? doc(window.db, 'settings', 'budget') : null;
-            if (!budgetRef) return;
-
-            const snapshot = await getDoc(budgetRef);
-            if (snapshot.exists()) {
-                const budget = snapshot.data();
-                budget[posteKey].items[itemIdx].date = value;
-                await window.saveToFirebase('settings', 'budget', budget);
-            }
+            if (!window.currentBudget) return;
+            
+            const budget = JSON.parse(JSON.stringify(window.currentBudget)); // Deep copy
+            budget[posteKey].items[itemIdx].date = value;
+            await window.saveToFirebase('settings', 'budget', budget);
         }
 
         function updateDashboard(budget) {
@@ -1486,6 +1481,18 @@
         }
 
         function renderDelivrables(delivrables) {
+            window.currentDelivrables = delivrables; // Sauvegarder pour toggleDeliverableStatus
+            
+            // Calcul progression globale
+            const total = delivrables.length;
+            const completed = delivrables.filter(d => d.statut === 'done').length;
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+            
+            // Mise à jour de la carte Progression Globale
+            document.getElementById('progressionGlobale').textContent = percentage + '%';
+            document.getElementById('progressionGlobaleFill').style.width = percentage + '%';
+            document.getElementById('progressionDetail').textContent = `${completed}/${total} livrables terminés`;
+            
             const tbody = document.getElementById('deliverablesTableBody');
             tbody.innerHTML = delivrables.map((d, idx) => `
                 <tr>
@@ -1503,17 +1510,15 @@
             `).join('');
         }
 
-        async function toggleDeliverableStatus(idx) {
-            const delivrablesRef = window.db ? doc(window.db, 'settings', 'delivrables') : null;
-            if (!delivrablesRef) return;
+        // Variable globale pour stocker les delivrables
+        window.currentDelivrables = [];
 
-            const snapshot = await getDoc(delivrablesRef);
-            if (snapshot.exists()) {
-                const data = snapshot.data();
-                const delivrables = data.items || [];
-                delivrables[idx].statut = delivrables[idx].statut === 'done' ? 'pending' : 'done';
-                await window.saveToFirebase('settings', 'delivrables', { items: delivrables });
-            }
+        async function toggleDeliverableStatus(idx) {
+            if (!window.currentDelivrables || window.currentDelivrables.length === 0) return;
+            
+            const delivrables = [...window.currentDelivrables];
+            delivrables[idx].statut = delivrables[idx].statut === 'done' ? 'pending' : 'done';
+            await window.saveToFirebase('settings', 'delivrables', { items: delivrables });
         }
 
         function renderContacts() {
@@ -1532,12 +1537,13 @@
                     <td>${c.nom}</td>
                     <td>${c.role}</td>
                     <td>${c.org}</td>
-                    <td>${c.contact}</td>
+                    <td><a href="tel:${c.contact}" style="color: var(--primary); text-decoration: none; font-weight: 500;">${c.contact}</a></td>
                 </tr>
             `).join('');
         }
 
         function renderKPIs(kpis) {
+            window.currentKPIs = kpis; // Sauvegarder pour updateKPI
             const tbody = document.getElementById('kpisTableBody');
             tbody.innerHTML = kpis.map((k, idx) => {
                 const progress = k.objectif > 0 ? Math.min(100, (k.actuel / k.objectif) * 100) : 0;
@@ -1561,17 +1567,15 @@
             }).join('');
         }
 
-        async function updateKPI(idx, value) {
-            const kpisRef = window.db ? doc(window.db, 'settings', 'kpis') : null;
-            if (!kpisRef) return;
+        // Variable globale pour stocker les KPIs
+        window.currentKPIs = [];
 
-            const snapshot = await getDoc(kpisRef);
-            if (snapshot.exists()) {
-                const data = snapshot.data();
-                const kpis = data.items || [];
-                kpis[idx].actuel = parseInt(value) || 0;
-                await window.saveToFirebase('settings', 'kpis', { items: kpis });
-            }
+        async function updateKPI(idx, value) {
+            if (!window.currentKPIs || window.currentKPIs.length === 0) return;
+            
+            const kpis = [...window.currentKPIs];
+            kpis[idx].actuel = parseInt(value) || 0;
+            await window.saveToFirebase('settings', 'kpis', { items: kpis });
         }
 
         function formatDate(dateStr) {
