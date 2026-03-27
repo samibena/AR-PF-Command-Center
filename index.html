@@ -539,7 +539,6 @@
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
     <div id="loginScreen" class="login-screen">
         <div class="login-box">
             <h1>Command Center</h1>
@@ -550,7 +549,6 @@
         </div>
     </div>
 
-    <!-- Main Dashboard -->
     <div id="dashboard" class="hidden">
         <div class="header">
             <div class="header-content">
@@ -567,7 +565,6 @@
         </div>
 
         <div class="container">
-            <!-- Stats Overview -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <h3>Budget Total</h3>
@@ -591,7 +588,6 @@
                 </div>
             </div>
 
-            <!-- Tabs Navigation -->
             <div class="tabs">
                 <button class="tab active" onclick="switchTab('timeline')">📅 Timeline</button>
                 <button class="tab" onclick="switchTab('budget')">💰 Budget Live</button>
@@ -601,7 +597,6 @@
                 <button class="tab" onclick="switchTab('kpis')">📊 KPIs</button>
             </div>
 
-            <!-- Timeline Tab -->
             <div id="timeline" class="tab-content active">
                 <div class="card">
                     <div class="card-header">
@@ -611,18 +606,15 @@
                 </div>
             </div>
 
-            <!-- Budget Tab -->
             <div id="budget" class="tab-content">
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">Budget Live — Postes Détaillés</h2>
-                        <button class="btn btn-primary" onclick="showAddExpenseModal()">+ Ajouter Dépense</button>
                     </div>
                     <div id="budgetAccordion"></div>
                 </div>
             </div>
 
-            <!-- Booking Tab -->
             <div id="booking" class="tab-content">
                 <div class="card">
                     <div class="card-header">
@@ -697,7 +689,6 @@
                 </div>
             </div>
 
-            <!-- Delivrables Tab -->
             <div id="delivrables" class="tab-content">
                 <div class="card">
                     <div class="card-header">
@@ -720,7 +711,6 @@
                 </div>
             </div>
 
-            <!-- Contacts Tab -->
             <div id="contacts" class="tab-content">
                 <div class="card">
                     <div class="card-header">
@@ -742,7 +732,6 @@
                 </div>
             </div>
 
-            <!-- KPIs Tab -->
             <div id="kpis" class="tab-content">
                 <div class="card">
                     <div class="card-header">
@@ -767,23 +756,10 @@
     </div>
 
     <script>
-        // Password hash (SHA-256 of "samibena1982")
-        const PASSWORD_HASH = "3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1";
-
-        async function hashPassword(password) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(password);
-            const hash = await crypto.subtle.digest('SHA-256', data);
-            return Array.from(new Uint8Array(hash))
-                .map(b => b.toString(16).padStart(2, '0'))
-                .join('');
-        }
-
-        async function login() {
+        function login() {
             const password = document.getElementById('passwordInput').value;
-            const hash = await hashPassword(password);
             
-            if (hash === PASSWORD_HASH) {
+            if (password === 'declic2026') {
                 sessionStorage.setItem('authenticated', 'true');
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('dashboard').classList.remove('hidden');
@@ -803,7 +779,6 @@
             document.getElementById('passwordInput').value = '';
         }
 
-        // Check authentication on load
         window.addEventListener('DOMContentLoaded', () => {
             if (sessionStorage.getItem('authenticated') === 'true') {
                 document.getElementById('loginScreen').classList.add('hidden');
@@ -812,7 +787,6 @@
             }
         });
 
-        // Tab Switching
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -821,7 +795,6 @@
             document.getElementById(tabName).classList.add('active');
         }
 
-        // Data Management
         function getStoredData() {
             const data = localStorage.getItem('alfaRomeoPFData');
             return data ? JSON.parse(data) : getDefaultData();
@@ -935,7 +908,6 @@
         function updateDashboard() {
             const data = getStoredData();
             
-            // Calculate costs
             let totalCout = 0;
             Object.values(data.budget).forEach(poste => {
                 if (poste.items) {
@@ -953,7 +925,6 @@
                 }
             });
 
-            // Calculate cashflow
             let encaisse = 0;
             data.encaissements.forEach(enc => {
                 if (enc.statut === 'received') {
@@ -1329,7 +1300,6 @@
             input.click();
         }
 
-        // Enter key for login
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('passwordInput')?.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') login();
@@ -1338,6 +1308,3 @@
     </script>
 </body>
 </html>
- 
-
- 
