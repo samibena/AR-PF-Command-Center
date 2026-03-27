@@ -1202,8 +1202,9 @@
             }
         }
 
-        // Variable globale pour stocker le budget
+        // Variable globale pour stocker le budget et les accordéons ouverts
         window.currentBudget = null;
+        window.openAccordions = new Set();
 
         function renderBudget(budget) {
             window.currentBudget = budget; // Sauvegarder pour les fonctions toggle
@@ -1306,6 +1307,18 @@
                     </div>
                 `;
             }).join('');
+            
+            // Rouvrir les accordéons qui étaient ouverts avant le render
+            setTimeout(() => {
+                window.openAccordions.forEach(idx => {
+                    const content = document.getElementById(`accordion-${idx}`);
+                    const chevron = document.getElementById(`chevron-${idx}`);
+                    if (content && chevron) {
+                        content.classList.add('open');
+                        chevron.classList.add('open');
+                    }
+                });
+            }, 0);
         }
 
         function toggleAccordion(idx) {
@@ -1315,9 +1328,11 @@
             if (content.classList.contains('open')) {
                 content.classList.remove('open');
                 chevron.classList.remove('open');
+                window.openAccordions.delete(idx); // Retirer de la liste
             } else {
                 content.classList.add('open');
                 chevron.classList.add('open');
+                window.openAccordions.add(idx); // Ajouter à la liste
             }
         }
 
