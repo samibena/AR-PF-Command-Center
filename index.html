@@ -628,12 +628,33 @@
                                     <th>Date</th>
                                     <th>Club</th>
                                     <th>Horaire</th>
-                                    <th>DJ Booké</th>
                                     <th>Statut</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="rpmTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Booking DJ (9 sessions)</h2>
+                        <button class="btn btn-primary" onclick="addDJSession()">+ Ajouter Session DJ</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="djTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Club</th>
+                                    <th>Horaire</th>
+                                    <th>DJ Confirmé</th>
+                                    <th>Brief Fait</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="djTableBody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -684,6 +705,10 @@
                             <option value="confirmed">Confirmé</option>
                             <option value="installed">Installé</option>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Déplacement vers autre club</label>
+                        <input type="text" id="photoCornerDeplacement" placeholder="Ex: Anfa Place le 15/05" />
                     </div>
                     <button class="btn btn-primary" onclick="savePhotoCorner()">💾 Enregistrer</button>
                 </div>
@@ -810,18 +835,24 @@
                 timeline: [
                     { date: '2026-03-31', title: 'Repérage PF avec cliente', status: 'pending', desc: '' },
                     { date: '2026-04-03', title: 'Deadline signature BC', status: 'pending', desc: 'Date buttoir absolue' },
+                    { date: '2026-04-05', title: 'Création BAT goodies', status: 'pending', desc: '' },
+                    { date: '2026-04-07', title: 'Validation BAT goodies', status: 'pending', desc: '' },
                     { date: '2026-04-08', title: 'Commande goodies', status: 'pending', desc: 'Délai 3 semaines' },
+                    { date: '2026-04-08', title: 'Brief DJ (Mise en scène, Playlist)', status: 'pending', desc: '' },
                     { date: '2026-04-10', title: 'Booking DJ × 9 sessions', status: 'pending', desc: '' },
+                    { date: '2026-04-10', title: 'Valider concept Photo Corner (Jantes)', status: 'pending', desc: '' },
+                    { date: '2026-04-12', title: 'Lancer production Photo Corner', status: 'pending', desc: 'Délai 3 jours' },
                     { date: '2026-04-15', title: 'Encaissement 40% AR (168K)', status: 'pending', desc: 'Paiement PF mois 1' },
-                    { date: '2026-04-20', title: 'Installation Photo Corner', status: 'pending', desc: 'Club prioritaire' },
+                    { date: '2026-04-15', title: 'Vérif assurance & autorisations PF', status: 'pending', desc: '' },
+                    { date: '2026-04-17', title: 'Installation Photo Corner', status: 'pending', desc: 'Club prioritaire' },
+                    { date: '2026-04-20', title: 'Production Roll UP & Stickers', status: 'pending', desc: '' },
                     { date: '2026-04-25', title: 'Premières sessions RPM', status: 'pending', desc: '' },
                     { date: '2026-04-30', title: 'Rapport mensuel 1', status: 'pending', desc: '' },
                     { date: '2026-05-15', title: 'Encaissement 35% AR (147K)', status: 'pending', desc: 'Paiement PF mois 2' },
                     { date: '2026-05-31', title: 'Rapport mensuel 2', status: 'pending', desc: '' },
                     { date: '2026-06-15', title: 'Paiement PF mois 3', status: 'pending', desc: '' },
                     { date: '2026-06-25', title: 'Dernières sessions + clôture', status: 'pending', desc: '' },
-                    { date: '2026-06-28', title: 'Rapport final + encaissement 25% (105K)', status: 'pending', desc: '' },
-                    { date: '2026-06-30', title: 'Paiement commission (20K)', status: 'pending', desc: 'Fin de projet' }
+                    { date: '2026-06-28', title: 'Rapport final + encaissement 25% (105K)', status: 'pending', desc: '' }
                 ],
                 budget: {
                     passageFitness: { facture: 215000, cout: 198500, paiements: [
@@ -830,59 +861,57 @@
                         { montant: 66166, date: '2026-06-15', statut: 'pending' }
                     ]},
                     production: { facture: 60000, cout: 42000, items: [
-                        { nom: 'DJ sessions (9×2000)', montant: 18000, statut: 'pending' },
-                        { nom: 'Coaches outdoor', montant: 0, statut: 'included', note: 'Inclus PF' },
-                        { nom: 'Sono/matériel', montant: 15000, statut: 'pending' },
-                        { nom: 'Coordination terrain', montant: 9000, statut: 'pending' }
+                        { nom: 'DJ sessions (9×2000) - Paiement à la session', montant: 18000, statut: 'pending' },
+                        { nom: 'Sono/matériel', montant: 0, statut: 'included', note: 'Inclus PF' }
                     ]},
                     goodies: { facture: 43000, cout: 39990, items: [
-                        { nom: 'Gourdes magnétiques (120)', montant: 27600, statut: 'pending' },
-                        { nom: 'Serviettes brodées (120)', montant: 7440, statut: 'pending' },
-                        { nom: 'Packaging premium (120)', montant: 4200, statut: 'pending' },
-                        { nom: 'Cartes invitation (50)', montant: 750, statut: 'pending' }
+                        { nom: 'Avance goodies', montant: 0, statut: 'pending', editable: true },
+                        { nom: 'Solde goodies', montant: 0, statut: 'pending', editable: true }
                     ]},
-                    digital: { facture: 30000, cout: 22000, items: [
-                        { nom: 'Commission intermédiaire', montant: 20000, statut: 'pending', note: 'Paiement fin projet' },
-                        { nom: 'HubSpot + Brevo (3 mois)', montant: 1500, statut: 'pending' },
-                        { nom: 'Setup CRM', montant: 500, statut: 'pending' }
+                    digital: { facture: 30000, cout: 1500, items: [
+                        { nom: 'HubSpot + Brevo + Setup CRM', montant: 1500, statut: 'pending', note: 'Check avec Yass' }
                     ]},
-                    signaletique: { facture: 15000, cout: 6000, items: [
-                        { nom: 'Affichage 3 clubs × 3 mois', montant: 6000, statut: 'pending' }
-                    ]},
-                    coordination: { facture: 10000, cout: 7200, items: [
-                        { nom: 'Honoraires coordination', montant: 7200, statut: 'pending' }
-                    ]},
-                    assurance: { facture: 18000, cout: 1200, items: [
-                        { nom: 'Assurance événements', montant: 1200, statut: 'pending' }
+                    signaletique: { facture: 15000, cout: 1800, items: [
+                        { nom: 'Roll UP', montant: 1200, statut: 'pending' },
+                        { nom: 'Stickers', montant: 600, statut: 'pending' }
                     ]}
                 },
                 rpmSessions: [],
+                djSessions: [],
                 outdoorSessions: [],
-                photoCorner: { club: '', date: '', status: 'pending' },
+                photoCorner: { club: '', date: '', status: 'pending', deplacement: '' },
                 delivrables: [
                     { nom: 'Convention partenariat Déclic ↔ AR', deadline: '2026-04-05', responsable: 'Sami', statut: 'pending' },
                     { nom: 'Contrat Déclic ↔ PF', deadline: '2026-04-05', responsable: 'Sami', statut: 'pending' },
                     { nom: 'Devis client 420K mis à jour', deadline: '2026-04-03', responsable: 'Sami', statut: 'pending' },
-                    { nom: 'Setup CRM (HubSpot + Brevo + Make)', deadline: '2026-04-10', responsable: 'Omar', statut: 'pending' },
-                    { nom: 'Dashboard Google Sheets coordination', deadline: '2026-04-12', responsable: 'Omar', statut: 'pending' },
-                    { nom: 'Rapport mensuel 1', deadline: '2026-04-30', responsable: 'Omar', statut: 'pending' },
-                    { nom: 'Rapport mensuel 2', deadline: '2026-05-31', responsable: 'Omar', statut: 'pending' },
+                    { nom: 'Création BAT goodies', deadline: '2026-04-05', responsable: 'Hassan', statut: 'pending' },
+                    { nom: 'Validation BAT goodies', deadline: '2026-04-07', responsable: 'Sami', statut: 'pending' },
+                    { nom: 'Brief DJ (Mise en scène, Playlist)', deadline: '2026-04-08', responsable: 'Sami', statut: 'pending' },
+                    { nom: 'Validation concept Photo Corner', deadline: '2026-04-10', responsable: 'Sami', statut: 'pending' },
+                    { nom: 'Setup CRM (HubSpot + Brevo + Make)', deadline: '2026-04-10', responsable: 'Yassine', statut: 'pending' },
+                    { nom: 'Production Photo Corner', deadline: '2026-04-12', responsable: 'Hassan', statut: 'pending' },
+                    { nom: 'Vérif assurance & autorisations', deadline: '2026-04-15', responsable: 'Sami', statut: 'pending' },
+                    { nom: 'Production Roll UP & Stickers', deadline: '2026-04-20', responsable: 'Hassan', statut: 'pending' },
+                    { nom: 'Rapport mensuel 1', deadline: '2026-04-30', responsable: 'Yassine', statut: 'pending' },
+                    { nom: 'Rapport mensuel 2', deadline: '2026-05-31', responsable: 'Yassine', statut: 'pending' },
                     { nom: 'Rapport final', deadline: '2026-06-28', responsable: 'Sami', statut: 'pending' }
                 ],
                 contacts: [
-                    { nom: 'Cliente AR', role: 'Décideur', org: 'Alfa Romeo Maroc', contact: 'À renseigner' },
-                    { nom: 'Sami', role: 'Gérant / Production', org: 'Déclic Agency', contact: '' },
-                    { nom: 'Omar', role: 'Associé / Digital', org: 'Déclic Agency', contact: '' },
-                    { nom: 'Passage Fitness', role: 'Partenaire terrain', org: '3 clubs Casablanca', contact: 'À renseigner' },
-                    { nom: 'DJ', role: 'Prestataire RPM', org: 'Externe', contact: 'À renseigner' },
-                    { nom: 'Intermédiaire', role: 'Commercial', org: 'Confidentiel', contact: '20K commission' }
+                    { nom: 'Farah', role: 'Cliente AR', org: 'Alfa Romeo Maroc', contact: '0667189399' },
+                    { nom: 'Amine PSYONE', role: 'DJ', org: 'Externe', contact: '0669058111' },
+                    { nom: 'Yassine', role: 'Digital / CRM', org: 'Déclic Agency', contact: '0660682047' },
+                    { nom: 'Hassan', role: 'Représentant Déclic 1', org: 'Déclic Agency', contact: '0642049658' },
+                    { nom: 'Sami', role: 'Représentant Déclic 2', org: 'Déclic Agency', contact: '0600066686' },
+                    { nom: 'Reda', role: 'Partenaire terrain', org: 'Passage Fitness', contact: '0669658442' }
                 ],
                 kpis: [
                     { nom: 'Impressions co-brandées', objectif: 50000, actuel: 0 },
                     { nom: 'Contacts qualifiés', objectif: 175, actuel: 0 },
                     { nom: 'Essais trackés', objectif: 32, actuel: 0 },
                     { nom: 'Reels co-brandés', objectif: 6, actuel: 0 },
-                    { nom: 'UGC membres', objectif: 30, actuel: 0 }
+                    { nom: 'UGC membres', objectif: 30, actuel: 0 },
+                    { nom: 'Sessions RPM réalisées', objectif: 9, actuel: 0 },
+                    { nom: 'Sessions outdoor réalisées', objectif: 4, actuel: 0 }
                 ],
                 encaissements: [
                     { montant: 168000, date: '2026-04-15', statut: 'pending', note: '40% signature' },
@@ -897,6 +926,7 @@
             renderTimeline(data.timeline);
             renderBudget(data.budget);
             renderRPMSessions(data.rpmSessions);
+            renderDJSessions(data.djSessions);
             renderOutdoorSessions(data.outdoorSessions);
             renderDelivrables(data.delivrables);
             renderContacts(data.contacts);
@@ -933,7 +963,8 @@
             });
 
             const cashflow = encaisse - totalCout;
-            const marge = 420000 - (198500 + 42000 + 39990 + 22000 + 6000 + 7200 + 1200);
+            const coutTotal = 198500 + 42000 + 1500 + 1800;
+            const marge = 420000 - coutTotal;
             const margePercent = ((marge / 420000) * 100).toFixed(1);
 
             document.getElementById('coutEngage').textContent = (totalCout / 1000).toFixed(0) + 'K DH';
@@ -979,10 +1010,8 @@
                 { key: 'passageFitness', title: 'Passage Fitness', facture: 215000, cout: 198500 },
                 { key: 'production', title: 'Production & Animation', facture: 60000, cout: 42000 },
                 { key: 'goodies', title: 'Goodies & Supports', facture: 43000, cout: 39990 },
-                { key: 'digital', title: 'Digital & CRM', facture: 30000, cout: 22000 },
-                { key: 'signaletique', title: 'Signalétique & Branding', facture: 15000, cout: 6000 },
-                { key: 'coordination', title: 'Coordination Déclic', facture: 10000, cout: 7200 },
-                { key: 'assurance', title: 'Assurance & Structure', facture: 18000, cout: 1200 }
+                { key: 'digital', title: 'Digital & CRM', facture: 30000, cout: 1500 },
+                { key: 'signaletique', title: 'Signalétique & Branding', facture: 15000, cout: 1800 }
             ];
 
             container.innerHTML = postes.map((poste, idx) => {
@@ -1012,7 +1041,13 @@
                     detailHTML = budget[poste.key].items.map((item, itemIdx) => `
                         <tr>
                             <td>${item.nom}${item.note ? `<br><small style="color: var(--text-light);">${item.note}</small>` : ''}</td>
-                            <td>${(item.montant / 1000).toFixed(1)}K DH</td>
+                            <td>
+                                ${item.editable ? `
+                                    <input type="number" value="${item.montant}" 
+                                           style="width: 100px; padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px;"
+                                           onchange="updateItemAmount('${poste.key}', ${itemIdx}, this.value)" /> DH
+                                ` : `${(item.montant / 1000).toFixed(1)}K DH`}
+                            </td>
                             <td>
                                 <span class="status-badge ${item.statut === 'paid' ? 'status-completed' : item.statut === 'included' ? 'status-completed' : 'status-pending'}">
                                     ${item.statut === 'paid' ? 'Payé' : item.statut === 'included' ? 'Inclus' : 'À payer'}
@@ -1098,6 +1133,13 @@
             }
         }
 
+        function updateItemAmount(posteKey, itemIdx, value) {
+            const data = getStoredData();
+            data.budget[posteKey].items[itemIdx].montant = parseInt(value) || 0;
+            saveStoredData(data);
+            renderBudget(data.budget);
+        }
+
         function renderRPMSessions(sessions) {
             const tbody = document.getElementById('rpmTableBody');
             tbody.innerHTML = sessions.map((s, idx) => `
@@ -1105,7 +1147,6 @@
                     <td>${formatDate(s.date)}</td>
                     <td>${s.club}</td>
                     <td>${s.horaire}</td>
-                    <td><input type="checkbox" ${s.djBooked ? 'checked' : ''} onchange="toggleDJBooked(${idx})" /></td>
                     <td><span class="status-badge ${s.status === 'confirmed' ? 'status-completed' : 'status-pending'}">${s.status === 'confirmed' ? 'Confirmé' : 'En attente'}</span></td>
                     <td><button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.75rem;" onclick="deleteRPMSession(${idx})">🗑️</button></td>
                 </tr>
@@ -1119,7 +1160,7 @@
             
             if (date && club && horaire) {
                 const data = getStoredData();
-                data.rpmSessions.push({ date, club, horaire, djBooked: false, status: 'pending' });
+                data.rpmSessions.push({ date, club, horaire, status: 'pending' });
                 saveStoredData(data);
                 renderRPMSessions(data.rpmSessions);
             }
@@ -1134,9 +1175,51 @@
             }
         }
 
-        function toggleDJBooked(idx) {
+        function renderDJSessions(sessions) {
+            const tbody = document.getElementById('djTableBody');
+            tbody.innerHTML = sessions.map((s, idx) => `
+                <tr>
+                    <td>${formatDate(s.date)}</td>
+                    <td>${s.club}</td>
+                    <td>${s.horaire}</td>
+                    <td><input type="checkbox" ${s.confirmed ? 'checked' : ''} onchange="toggleDJConfirmed(${idx})" /></td>
+                    <td><input type="checkbox" ${s.briefed ? 'checked' : ''} onchange="toggleDJBriefed(${idx})" /></td>
+                    <td><button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.75rem;" onclick="deleteDJSession(${idx})">🗑️</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function addDJSession() {
+            const date = prompt('Date (YYYY-MM-DD):');
+            const club = prompt('Club (Morocco Mall / Anfa Place / Marina):');
+            const horaire = prompt('Horaire (ex: 19h00):');
+            
+            if (date && club && horaire) {
+                const data = getStoredData();
+                data.djSessions.push({ date, club, horaire, confirmed: false, briefed: false });
+                saveStoredData(data);
+                renderDJSessions(data.djSessions);
+            }
+        }
+
+        function deleteDJSession(idx) {
+            if (confirm('Supprimer cette session DJ ?')) {
+                const data = getStoredData();
+                data.djSessions.splice(idx, 1);
+                saveStoredData(data);
+                renderDJSessions(data.djSessions);
+            }
+        }
+
+        function toggleDJConfirmed(idx) {
             const data = getStoredData();
-            data.rpmSessions[idx].djBooked = !data.rpmSessions[idx].djBooked;
+            data.djSessions[idx].confirmed = !data.djSessions[idx].confirmed;
+            saveStoredData(data);
+        }
+
+        function toggleDJBriefed(idx) {
+            const data = getStoredData();
+            data.djSessions[idx].briefed = !data.djSessions[idx].briefed;
             saveStoredData(data);
         }
 
@@ -1180,6 +1263,7 @@
             document.getElementById('photoCornerClub').value = pc.club || '';
             document.getElementById('photoCornerDate').value = pc.date || '';
             document.getElementById('photoCornerStatus').value = pc.status || 'pending';
+            document.getElementById('photoCornerDeplacement').value = pc.deplacement || '';
         }
 
         function savePhotoCorner() {
@@ -1187,7 +1271,8 @@
             data.photoCorner = {
                 club: document.getElementById('photoCornerClub').value,
                 date: document.getElementById('photoCornerDate').value,
-                status: document.getElementById('photoCornerStatus').value
+                status: document.getElementById('photoCornerStatus').value,
+                deplacement: document.getElementById('photoCornerDeplacement').value
             };
             saveStoredData(data);
             alert('Photo Corner enregistré ✅');
