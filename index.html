@@ -619,7 +619,6 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">Sessions RPM (9 sessions)</h2>
-                        <button class="btn btn-primary" onclick="addRPMSession()">+ Ajouter Session</button>
                     </div>
                     <div class="table-container">
                         <table id="rpmTable">
@@ -629,7 +628,6 @@
                                     <th>Club</th>
                                     <th>Horaire</th>
                                     <th>Statut</th>
-                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="rpmTableBody"></tbody>
@@ -640,7 +638,6 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">Booking DJ (9 sessions)</h2>
-                        <button class="btn btn-primary" onclick="addDJSession()">+ Ajouter Session DJ</button>
                     </div>
                     <div class="table-container">
                         <table id="djTable">
@@ -651,7 +648,6 @@
                                     <th>Horaire</th>
                                     <th>DJ Confirmé</th>
                                     <th>Brief Fait</th>
-                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="djTableBody"></tbody>
@@ -662,7 +658,6 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">Sessions Outdoor (4 sessions)</h2>
-                        <button class="btn btn-primary" onclick="addOutdoorSession()">+ Ajouter Session</button>
                     </div>
                     <div class="table-container">
                         <table id="outdoorTable">
@@ -673,7 +668,6 @@
                                     <th>Lieu</th>
                                     <th>Coach</th>
                                     <th>Statut</th>
-                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="outdoorTableBody"></tbody>
@@ -860,13 +854,26 @@
                         { montant: 66167, date: '2026-05-15', statut: 'pending' },
                         { montant: 66166, date: '2026-06-15', statut: 'pending' }
                     ]},
-                    production: { facture: 60000, cout: 42000, items: [
-                        { nom: 'DJ sessions (9×2000) - Paiement à la session', montant: 18000, statut: 'pending' },
-                        { nom: 'Sono/matériel', montant: 0, statut: 'included', note: 'Inclus PF' }
+                    production: { facture: 60000, cout: 18000, items: [
+                        { nom: 'DJ Session 1', montant: 2000, date: '', statut: 'pending' },
+                        { nom: 'DJ Session 2', montant: 2000, date: '', statut: 'pending' },
+                        { nom: 'DJ Session 3', montant: 2000, date: '', statut: 'pending' },
+                        { nom: 'DJ Session 4', montant: 2000, date: '', statut: 'pending' },
+                        { nom: 'DJ Session 5', montant: 2000, date: '', statut: 'pending' },
+                        { nom: 'DJ Session 6', montant: 2000, date: '', statut: 'pending' },
+                        { nom: 'DJ Session 7', montant: 2000, date: '', statut: 'pending' },
+                        { nom: 'DJ Session 8', montant: 2000, date: '', statut: 'pending' },
+                        { nom: 'DJ Session 9', montant: 2000, date: '', statut: 'pending' }
                     ]},
                     goodies: { facture: 43000, cout: 39990, items: [
-                        { nom: 'Avance goodies', montant: 0, statut: 'pending', editable: true },
-                        { nom: 'Solde goodies', montant: 0, statut: 'pending', editable: true }
+                        { nom: 'Gourdes magnétiques - Avance', montant: 0, statut: 'pending', editable: true },
+                        { nom: 'Gourdes magnétiques - Solde', montant: 0, statut: 'pending', editable: true },
+                        { nom: 'Serviettes brodées - Avance', montant: 0, statut: 'pending', editable: true },
+                        { nom: 'Serviettes brodées - Solde', montant: 0, statut: 'pending', editable: true },
+                        { nom: 'Packaging premium - Avance', montant: 0, statut: 'pending', editable: true },
+                        { nom: 'Packaging premium - Solde', montant: 0, statut: 'pending', editable: true },
+                        { nom: 'Cartes invitation - Avance', montant: 0, statut: 'pending', editable: true },
+                        { nom: 'Cartes invitation - Solde', montant: 0, statut: 'pending', editable: true }
                     ]},
                     digital: { facture: 30000, cout: 1500, items: [
                         { nom: 'HubSpot + Brevo + Setup CRM', montant: 1500, statut: 'pending', note: 'Check avec Yass' }
@@ -876,25 +883,51 @@
                         { nom: 'Stickers', montant: 600, statut: 'pending' }
                     ]}
                 },
-                rpmSessions: [],
-                djSessions: [],
-                outdoorSessions: [],
+                rpmSessions: [
+                    { date: '', club: '', horaire: '', status: 'À booker' },
+                    { date: '', club: '', horaire: '', status: 'À booker' },
+                    { date: '', club: '', horaire: '', status: 'À booker' },
+                    { date: '', club: '', horaire: '', status: 'À booker' },
+                    { date: '', club: '', horaire: '', status: 'À booker' },
+                    { date: '', club: '', horaire: '', status: 'À booker' },
+                    { date: '', club: '', horaire: '', status: 'À booker' },
+                    { date: '', club: '', horaire: '', status: 'À booker' },
+                    { date: '', club: '', horaire: '', status: 'À booker' }
+                ],
+                djSessions: [
+                    { date: '', club: '', horaire: '', confirmed: false, briefed: false },
+                    { date: '', club: '', horaire: '', confirmed: false, briefed: false },
+                    { date: '', club: '', horaire: '', confirmed: false, briefed: false },
+                    { date: '', club: '', horaire: '', confirmed: false, briefed: false },
+                    { date: '', club: '', horaire: '', confirmed: false, briefed: false },
+                    { date: '', club: '', horaire: '', confirmed: false, briefed: false },
+                    { date: '', club: '', horaire: '', confirmed: false, briefed: false },
+                    { date: '', club: '', horaire: '', confirmed: false, briefed: false },
+                    { date: '', club: '', horaire: '', confirmed: false, briefed: false }
+                ],
+                outdoorSessions: [
+                    { date: '', type: '', lieu: '', coach: '', status: 'À booker' },
+                    { date: '', type: '', lieu: '', coach: '', status: 'À booker' },
+                    { date: '', type: '', lieu: '', coach: '', status: 'À booker' },
+                    { date: '', type: '', lieu: '', coach: '', status: 'À booker' }
+                ],
                 photoCorner: { club: '', date: '', status: 'pending', deplacement: '' },
                 delivrables: [
                     { nom: 'Convention partenariat Déclic ↔ AR', deadline: '2026-04-05', responsable: 'Sami', statut: 'pending' },
                     { nom: 'Contrat Déclic ↔ PF', deadline: '2026-04-05', responsable: 'Sami', statut: 'pending' },
-                    { nom: 'Devis client 420K mis à jour', deadline: '2026-04-03', responsable: 'Sami', statut: 'pending' },
-                    { nom: 'Création BAT goodies', deadline: '2026-04-05', responsable: 'Hassan', statut: 'pending' },
                     { nom: 'Validation BAT goodies', deadline: '2026-04-07', responsable: 'Sami', statut: 'pending' },
-                    { nom: 'Brief DJ (Mise en scène, Playlist)', deadline: '2026-04-08', responsable: 'Sami', statut: 'pending' },
-                    { nom: 'Validation concept Photo Corner', deadline: '2026-04-10', responsable: 'Sami', statut: 'pending' },
-                    { nom: 'Setup CRM (HubSpot + Brevo + Make)', deadline: '2026-04-10', responsable: 'Yassine', statut: 'pending' },
+                    { nom: 'Création BAT goodies', deadline: '2026-04-05', responsable: 'Hassan', statut: 'pending' },
                     { nom: 'Production Photo Corner', deadline: '2026-04-12', responsable: 'Hassan', statut: 'pending' },
-                    { nom: 'Vérif assurance & autorisations', deadline: '2026-04-15', responsable: 'Sami', statut: 'pending' },
+                    { nom: 'Vérif assurance & autorisations', deadline: '2026-04-15', responsable: 'Hassan', statut: 'pending' },
                     { nom: 'Production Roll UP & Stickers', deadline: '2026-04-20', responsable: 'Hassan', statut: 'pending' },
-                    { nom: 'Rapport mensuel 1', deadline: '2026-04-30', responsable: 'Yassine', statut: 'pending' },
-                    { nom: 'Rapport mensuel 2', deadline: '2026-05-31', responsable: 'Yassine', statut: 'pending' },
-                    { nom: 'Rapport final', deadline: '2026-06-28', responsable: 'Sami', statut: 'pending' }
+                    { nom: 'Devis client 420K mis à jour', deadline: '2026-04-03', responsable: 'Sami ou Hassan', statut: 'pending' },
+                    { nom: 'Brief DJ (Mise en scène, Playlist)', deadline: '2026-04-08', responsable: 'Sami ou Hassan', statut: 'pending' },
+                    { nom: 'Validation concept Photo Corner', deadline: '2026-04-10', responsable: 'Sami ou Hassan', statut: 'pending' },
+                    { nom: 'Setup CRM (HubSpot + Brevo + Make)', deadline: '2026-04-10', responsable: 'Yass', statut: 'pending' },
+                    { nom: 'Rapport mensuel 1', deadline: '2026-04-30', responsable: 'Yass', statut: 'pending' },
+                    { nom: 'Rapport mensuel 2', deadline: '2026-05-31', responsable: 'Yass', statut: 'pending' },
+                    { nom: 'Rapport de fin de campagne', deadline: '2026-06-28', responsable: 'Yass', statut: 'pending' },
+                    { nom: 'Synchronisation Performance Board', deadline: '2026-04-15', responsable: 'Yass', statut: 'pending' }
                 ],
                 contacts: [
                     { nom: 'Farah', role: 'Cliente AR', org: 'Alfa Romeo Maroc', contact: '0667189399' },
@@ -1049,12 +1082,23 @@
                                 ` : `${(item.montant / 1000).toFixed(1)}K DH`}
                             </td>
                             <td>
-                                <span class="status-badge ${item.statut === 'paid' ? 'status-completed' : item.statut === 'included' ? 'status-completed' : 'status-pending'}">
-                                    ${item.statut === 'paid' ? 'Payé' : item.statut === 'included' ? 'Inclus' : 'À payer'}
-                                </span>
+                                ${item.date !== undefined ? `
+                                    <input type="date" value="${item.date || ''}" 
+                                           style="width: 140px; padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px;"
+                                           onchange="updateItemDate('${poste.key}', ${itemIdx}, this.value)" />
+                                ` : `
+                                    <span class="status-badge ${item.statut === 'paid' ? 'status-completed' : item.statut === 'included' ? 'status-completed' : 'status-pending'}">
+                                        ${item.statut === 'paid' ? 'Payé' : item.statut === 'included' ? 'Inclus' : 'À payer'}
+                                    </span>
+                                `}
                             </td>
                             <td>
-                                ${item.statut !== 'included' ? `
+                                ${item.statut !== 'included' && item.date === undefined ? `
+                                    <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.75rem;" 
+                                            onclick="toggleItemStatus('${poste.key}', ${itemIdx})">
+                                        ${item.statut === 'paid' ? 'Annuler' : 'Marquer payé'}
+                                    </button>
+                                ` : item.date !== undefined ? `
                                     <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.75rem;" 
                                             onclick="toggleItemStatus('${poste.key}', ${itemIdx})">
                                         ${item.statut === 'paid' ? 'Annuler' : 'Marquer payé'}
@@ -1140,17 +1184,42 @@
             renderBudget(data.budget);
         }
 
+        function updateItemDate(posteKey, itemIdx, value) {
+            const data = getStoredData();
+            data.budget[posteKey].items[itemIdx].date = value;
+            saveStoredData(data);
+            renderBudget(data.budget);
+        }
+
         function renderRPMSessions(sessions) {
             const tbody = document.getElementById('rpmTableBody');
             tbody.innerHTML = sessions.map((s, idx) => `
                 <tr>
-                    <td>${formatDate(s.date)}</td>
-                    <td>${s.club}</td>
-                    <td>${s.horaire}</td>
-                    <td><span class="status-badge ${s.status === 'confirmed' ? 'status-completed' : 'status-pending'}">${s.status === 'confirmed' ? 'Confirmé' : 'En attente'}</span></td>
-                    <td><button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.75rem;" onclick="deleteRPMSession(${idx})">🗑️</button></td>
+                    <td><input type="date" value="${s.date || ''}" onchange="updateRPMField(${idx}, 'date', this.value)" style="width: 140px; padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px;" /></td>
+                    <td>
+                        <select onchange="updateRPMField(${idx}, 'club', this.value)" style="width: 160px; padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px;">
+                            <option value="">Sélectionner...</option>
+                            <option value="Morocco Mall" ${s.club === 'Morocco Mall' ? 'selected' : ''}>Morocco Mall</option>
+                            <option value="Anfa Place" ${s.club === 'Anfa Place' ? 'selected' : ''}>Anfa Place</option>
+                            <option value="Marina" ${s.club === 'Marina' ? 'selected' : ''}>Marina</option>
+                        </select>
+                    </td>
+                    <td><input type="text" value="${s.horaire || ''}" onchange="updateRPMField(${idx}, 'horaire', this.value)" placeholder="ex: 19h00" style="width: 100px; padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px;" /></td>
+                    <td>
+                        <select onchange="updateRPMField(${idx}, 'status', this.value)" style="width: 140px; padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px;">
+                            <option value="À booker" ${s.status === 'À booker' ? 'selected' : ''}>À booker</option>
+                            <option value="En cours" ${s.status === 'En cours' ? 'selected' : ''}>En cours</option>
+                            <option value="Booké" ${s.status === 'Booké' ? 'selected' : ''}>Booké</option>
+                        </select>
+                    </td>
                 </tr>
             `).join('');
+        }
+
+        function updateRPMField(idx, field, value) {
+            const data = getStoredData();
+            data.rpmSessions[idx][field] = value;
+            saveStoredData(data);
         }
 
         function addRPMSession() {
@@ -1179,14 +1248,26 @@
             const tbody = document.getElementById('djTableBody');
             tbody.innerHTML = sessions.map((s, idx) => `
                 <tr>
-                    <td>${formatDate(s.date)}</td>
-                    <td>${s.club}</td>
-                    <td>${s.horaire}</td>
+                    <td><input type="date" value="${s.date || ''}" onchange="updateDJField(${idx}, 'date', this.value)" style="width: 140px; padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px;" /></td>
+                    <td>
+                        <select onchange="updateDJField(${idx}, 'club', this.value)" style="width: 160px; padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px;">
+                            <option value="">Sélectionner...</option>
+                            <option value="Morocco Mall" ${s.club === 'Morocco Mall' ? 'selected' : ''}>Morocco Mall</option>
+                            <option value="Anfa Place" ${s.club === 'Anfa Place' ? 'selected' : ''}>Anfa Place</option>
+                            <option value="Marina" ${s.club === 'Marina' ? 'selected' : ''}>Marina</option>
+                        </select>
+                    </td>
+                    <td><input type="text" value="${s.horaire || ''}" onchange="updateDJField(${idx}, 'horaire', this.value)" placeholder="ex: 19h00" style="width: 100px; padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px;" /></td>
                     <td><input type="checkbox" ${s.confirmed ? 'checked' : ''} onchange="toggleDJConfirmed(${idx})" /></td>
                     <td><input type="checkbox" ${s.briefed ? 'checked' : ''} onchange="toggleDJBriefed(${idx})" /></td>
-                    <td><button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.75rem;" onclick="deleteDJSession(${idx})">🗑️</button></td>
                 </tr>
             `).join('');
+        }
+
+        function updateDJField(idx, field, value) {
+            const data = getStoredData();
+            data.djSessions[idx][field] = value;
+            saveStoredData(data);
         }
 
         function addDJSession() {
@@ -1227,14 +1308,32 @@
             const tbody = document.getElementById('outdoorTableBody');
             tbody.innerHTML = sessions.map((s, idx) => `
                 <tr>
-                    <td>${s.date ? formatDate(s.date) : 'À définir'}</td>
-                    <td>${s.type}</td>
-                    <td>${s.lieu}</td>
-                    <td>${s.coach || 'À confirmer'}</td>
-                    <td><span class="status-badge ${s.status === 'confirmed' ? 'status-completed' : 'status-pending'}">${s.status === 'confirmed' ? 'Confirmé' : 'En attente'}</span></td>
-                    <td><button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.75rem;" onclick="deleteOutdoorSession(${idx})">🗑️</button></td>
+                    <td><input type="date" value="${s.date || ''}" onchange="updateOutdoorField(${idx}, 'date', this.value)" style="width: 140px; padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px;" /></td>
+                    <td>
+                        <select onchange="updateOutdoorField(${idx}, 'type', this.value)" style="width: 120px; padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px;">
+                            <option value="">Sélectionner...</option>
+                            <option value="Run" ${s.type === 'Run' ? 'selected' : ''}>Run</option>
+                            <option value="Yoga" ${s.type === 'Yoga' ? 'selected' : ''}>Yoga</option>
+                            <option value="Pilates" ${s.type === 'Pilates' ? 'selected' : ''}>Pilates</option>
+                        </select>
+                    </td>
+                    <td><input type="text" value="${s.lieu || ''}" onchange="updateOutdoorField(${idx}, 'lieu', this.value)" placeholder="Lieu" style="width: 150px; padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px;" /></td>
+                    <td><input type="text" value="${s.coach || ''}" onchange="updateOutdoorField(${idx}, 'coach', this.value)" placeholder="Coach" style="width: 120px; padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px;" /></td>
+                    <td>
+                        <select onchange="updateOutdoorField(${idx}, 'status', this.value)" style="width: 140px; padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px;">
+                            <option value="À booker" ${s.status === 'À booker' ? 'selected' : ''}>À booker</option>
+                            <option value="En cours" ${s.status === 'En cours' ? 'selected' : ''}>En cours</option>
+                            <option value="Booké" ${s.status === 'Booké' ? 'selected' : ''}>Booké</option>
+                        </select>
+                    </td>
                 </tr>
             `).join('');
+        }
+
+        function updateOutdoorField(idx, field, value) {
+            const data = getStoredData();
+            data.outdoorSessions[idx][field] = value;
+            saveStoredData(data);
         }
 
         function addOutdoorSession() {
